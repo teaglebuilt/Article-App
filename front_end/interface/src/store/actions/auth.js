@@ -30,7 +30,7 @@ export const logout = () => {
 
 }
 
-checkAuthTimeout = expDate => {
+const checkAuthTimeout = expDate => {
     return dispatch => {
         setTimeout(() => {
             dispatch(logout());
@@ -80,5 +80,22 @@ export const signUp = (username, email, password1, password2) => {
         .catch( error => {
             dispatch(authFail(error))
         })
+    }
+}
+
+export const authCheckState = () => {
+    return dispatch => {
+        const token = localStorage.getItem('token');
+        if (token === undefined) {
+            dispatch(logout());
+        } else {
+            const expirationDate = new Date(localStorage.getItem('expirationDate'));
+            if ( expirationDate <= new Date() ) {
+                dispatch(logout());
+            } else {
+                dispatch(authSuccess(token));
+                dispatch(checkAuthTimeout( (expirationDate.getTime() - new Date().getTime()) / 1000) );
+            }
+        }
     }
 }
