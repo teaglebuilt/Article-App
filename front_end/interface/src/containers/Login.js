@@ -5,7 +5,6 @@ import { NavLink } from 'react-router-dom';
 import * as actions from '../store/actions/auth';
 
 const FormItem = Form.Item;
-
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 
@@ -14,17 +13,20 @@ class NormalLoginForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.onAuth(values.username, values.password)
+        this.props.onAuth(values.userName, values.password);
+        this.props.history.push('/');
       }
     });
-    this.props.history.push("/");
   }
 
   render() {
     let errorMessage = null;
     if (this.props.error) {
-        <p>{this.props.error.message}</p>
+        errorMessage = (
+            <p>{this.props.error.message}</p>
+        );
     }
+
     const { getFieldDecorator } = this.props.form;
     return (
         <div>
@@ -36,43 +38,44 @@ class NormalLoginForm extends React.Component {
 
                 :
 
-            <Form onSubmit={this.handleSubmit} className="login-form">
+                <Form onSubmit={this.handleSubmit} className="login-form">
 
-                <FormItem>
-                {getFieldDecorator('userName', {
-                    rules: [{ required: true, message: 'Please input your username!' }],
-                })(
-                    <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
-                )}
-                </FormItem>
+                    <FormItem>
+                    {getFieldDecorator('userName', {
+                        rules: [{ required: true, message: 'Please input your username!' }],
+                    })(
+                        <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Username" />
+                    )}
+                    </FormItem>
 
-                <FormItem>
-                {getFieldDecorator('password', {
-                    rules: [{ required: true, message: 'Please input your Password!' }],
-                })(
-                    <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
-                )}
-                </FormItem>
+                    <FormItem>
+                    {getFieldDecorator('password', {
+                        rules: [{ required: true, message: 'Please input your Password!' }],
+                    })(
+                        <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+                    )}
+                    </FormItem>
 
-                <FormItem>
-                <Button type="primary" htmlType="submit" style={{marginRight: "10px"}}>
-                Login
-                </Button>
-                Or
-                <NavLink style={{marginRight: '10px'}}
-                to='/signup/'> SignUp
-                </NavLink>
-                </FormItem>
-            </Form>
+                    <FormItem>
+                    <Button type="primary" htmlType="submit" style={{marginRight: '10px'}}>
+                        Login
+                    </Button>
+                    Or
+                    <NavLink
+                        style={{marginRight: '10px'}}
+                        to='/signup/'> signup
+                    </NavLink>
+                    </FormItem>
+                </Form>
             }
-        </div>
+      </div>
     );
   }
 }
 
 const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
     return {
         loading: state.loading,
         error: state.error
