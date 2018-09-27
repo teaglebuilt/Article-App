@@ -5,7 +5,7 @@ class Article(models.Model):
     title = models.CharField(max_length=120)
     description = models.CharField(max_length=500)
     content = models.TextField()
-    image = models.ImageField()
+    image = models.ImageField(upload_to='%m/%d', blank=True, null=True)
 
     def __str__(self):
         return self.title
